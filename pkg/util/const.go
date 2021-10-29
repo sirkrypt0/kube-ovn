@@ -39,6 +39,7 @@ const (
 	AllocatedAnnotationTemplate     = "%s.kubernetes.io/allocated"
 	RoutedAnnotationTemplate        = "%s.kubernetes.io/routed"
 	MacAddressAnnotationTemplate    = "%s.kubernetes.io/mac_address"
+	PromiscuousAnnotationTemplate   = "%s.kubernetes.io/promiscuous_port"
 	IpAddressAnnotationTemplate     = "%s.kubernetes.io/ip_address"
 	CidrAnnotationTemplate          = "%s.kubernetes.io/cidr"
 	GatewayAnnotationTemplate       = "%s.kubernetes.io/gateway"
@@ -157,4 +158,5 @@ const (
 	NetemQosLatencyAnnotationTemplate = "%s.kubernetes.io/latency"
 	NetemQosLimitAnnotationTemplate   = "%s.kubernetes.io/limit"
 	NetemQosLossAnnotationTemplate    = "%s.kubernetes.io/loss"
+	PromiscuousMAC                    = "unknown"
 )

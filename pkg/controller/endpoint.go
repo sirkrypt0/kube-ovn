@@ -181,6 +181,9 @@ func (c *Controller) handleUpdateEndpoint(key string) error {
 	}
 
 	for _, clusterIP := range clusterIPs {
+		if clusterIP == "None" {
+			continue
+		}
 		for _, port := range svc.Spec.Ports {
 			vip := util.JoinHostPort(clusterIP, port.Port)
 			backends := getServicePortBackends(ep, pods, port, clusterIP)

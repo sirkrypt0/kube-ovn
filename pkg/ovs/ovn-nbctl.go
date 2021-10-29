@@ -181,11 +181,17 @@ func (c Client) SetPortSecurity(portSecurity bool, port, mac, ipStr, vips string
 }
 
 // CreatePort create logical switch port in ovn
-func (c Client) CreatePort(ls, port, ip, mac, pod, namespace string, portSecurity bool, securityGroups string, vips string, liveMigration bool) error {
+func (c Client) CreatePort(ls, port, ip, mac, pod, namespace string, portSecurity bool, securityGroups string, vips string, liveMigration bool, promiscuous bool) error {
 	var ovnCommand []string
 	var addresses []string
-	addresses = append(addresses, mac)
-	addresses = append(addresses, strings.Split(ip, ",")...)
+
+	if promiscuous {
+		addresses = append(addresses, util.PromiscuousMAC)
+	} else {
+		addresses = append(addresses, mac)
+		addresses = append(addresses, strings.Split(ip, ",")...)
+	}
+
 	ovnCommand = []string{MayExist, "lsp-add", ls, port}
 	isAddrConflict := false
 	if liveMigration {

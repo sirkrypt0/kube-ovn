@@ -525,7 +525,10 @@ func (c *Controller) handleAddPod(key string) error {
 				}
 			}
 			portName := ovs.PodNameToPortName(name, namespace, podNet.ProviderName)
-			if err := c.ovnClient.CreatePort(subnet.Name, portName, ipStr, mac, pod.Name, pod.Namespace, portSecurity, securityGroupAnnotation, vips, podNet.AllowLiveMigration); err != nil {
+
+			promiscuous := pod.Annotations[fmt.Sprintf(util.PromiscuousAnnotationTemplate, podNet.ProviderName)] == "true"
+
+			if err := c.ovnClient.CreatePort(subnet.Name, portName, ipStr, mac, pod.Name, pod.Namespace, portSecurity, securityGroupAnnotation, vips, podNet.AllowLiveMigration, promiscuous); err != nil {
 				c.recorder.Eventf(pod, v1.EventTypeWarning, "CreateOVNPortFailed", err.Error())
 				return err
 			}
