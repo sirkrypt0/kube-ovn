@@ -122,6 +122,7 @@ type SubnetSpec struct {
 	HtbQos string `json:"htbqos,omitempty"`
 
 	LogicalGateway         bool `json:"logicalGateway"`
+	DisableRouter          bool `json:"disableRouter"`
 	DisableGatewayCheck    bool `json:"disableGatewayCheck"`
 	DisableInterConnection bool `json:"disableInterConnection"`
 }

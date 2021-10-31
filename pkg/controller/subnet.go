@@ -571,7 +571,7 @@ func (c *Controller) handleAddOrUpdateSubnet(key string) error {
 		return err
 	}
 
-	needRouter := (subnet.Spec.Vlan == "" || subnet.Spec.LogicalGateway) || subnet.Spec.Vpc != util.DefaultVpc
+	needRouter := !subnet.Spec.DisableRouter && ((subnet.Spec.Vlan == "" || subnet.Spec.LogicalGateway) || subnet.Spec.Vpc != util.DefaultVpc)
 	if !exist {
 		subnet.Status.EnsureStandardConditions()
 		// If multiple namespace use same ls name, only first one will success
