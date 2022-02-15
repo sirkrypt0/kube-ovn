@@ -1280,6 +1280,7 @@ func (c *Controller) Run(stopCh <-chan struct{}) {
 
 	go wait.Until(ovs.CleanLostInterface, time.Minute, stopCh)
 	go wait.Until(recompute, 10*time.Minute, stopCh)
+	go wait.Until(rotateLog, 1*time.Hour, stopCh)
 
 	if ok := cache.WaitForCacheSync(stopCh, c.providerNetworksSynced, c.subnetsSynced, c.podsSynced, c.nodesSynced, c.htbQosSynced); !ok {
 		klog.Fatalf("failed to wait for caches to sync")
@@ -1313,5 +1314,20 @@ func recompute() {
 	output, err := exec.Command("ovn-appctl", "-t", "ovn-controller", "recompute").CombinedOutput()
 	if err != nil {
 		klog.Errorf("failed to recompute ovn-controller %q", output)
+	}
+}
+
+func rotateLog() {
+	output, err := exec.Command("logrotate", "/etc/logrotate.d/openvswitch").CombinedOutput()
+	if err != nil {
+		klog.Errorf("failed to rotate openvswitch log %q", output)
+	}
+	output, err = exec.Command("logrotate", "/etc/logrotate.d/ovn").CombinedOutput()
+	if err != nil {
+		klog.Errorf("failed to rotate ovn log %q", output)
+	}
+	output, err = exec.Command("logrotate", "/etc/logrotate.d/kubeovn").CombinedOutput()
+	if err != nil {
+		klog.Errorf("failed to rotate kube-ovn log %q", output)
 	}
 }
