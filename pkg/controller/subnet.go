@@ -780,8 +780,8 @@ func (c *Controller) handleAddOrUpdateSubnet(key string) error {
 		return err
 	}
 
-	needRouter := subnet.Spec.Vlan == "" || subnet.Spec.LogicalGateway ||
-		(subnet.Status.U2OInterconnectionIP != "" && subnet.Spec.U2OInterconnection)
+	needRouter := !subnet.Spec.DisableRouter && (subnet.Spec.Vlan == "" || subnet.Spec.LogicalGateway ||
+		(subnet.Status.U2OInterconnectionIP != "" && subnet.Spec.U2OInterconnection))
 	// 1. overlay subnet, should add lrp, lrp ip is subnet gw
 	// 2. underlay subnet use logical gw, should add lrp, lrp ip is subnet gw
 	randomAllocateGW := !subnet.Spec.LogicalGateway && vpc.Spec.EnableExternal && subnet.Name == c.config.ExternalGatewaySwitch
@@ -2900,7 +2900,7 @@ func (c *Controller) deleteStaticRouteForU2OInterconn(subnet *kubeovnv1.Subnet) 
 }
 
 func (c *Controller) reconcileRouteTableForSubnet(subnet *kubeovnv1.Subnet) error {
-	if subnet.Spec.Vlan != "" && !subnet.Spec.U2OInterconnection {
+	if subnet.Spec.DisableRouter || (subnet.Spec.Vlan != "" && !subnet.Spec.U2OInterconnection) {
 		return nil
 	}
 
