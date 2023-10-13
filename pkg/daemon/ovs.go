@@ -16,6 +16,12 @@ import (
 const gatewayCheckMaxRetry = 200
 
 func pingGateway(gw, src string, verbose bool, maxRetry int) (count int, err error) {
+	// maxRetry always needs to be > 0, as otherwise the pinger will panic because of the
+	// pinger.Timeout == 0.
+	if maxRetry <= 0 {
+		klog.Errorf("pinger maxRetry <= 0")
+		return 0, fmt.Errorf("maxRetry <= 0")
+	}
 	pinger, err := goping.NewPinger(gw)
 	if err != nil {
 		return 0, fmt.Errorf("failed to init pinger: %v", err)

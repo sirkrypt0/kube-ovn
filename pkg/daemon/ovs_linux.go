@@ -402,6 +402,10 @@ func waitNetworkReady(nic, ipAddr, gateway string, underlayGateway, verbose bool
 				return err
 			}
 		}
+		// maxRetry should always be at least one, as otherwise pingGateway will panic
+		if maxRetry <= 0 {
+			maxRetry = 1
+		}
 	}
 	return nil
 }
