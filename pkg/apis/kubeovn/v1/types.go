@@ -148,7 +148,7 @@ type SubnetSpec struct {
 	Vips []string `json:"vips,omitempty"`
 
 	LogicalGateway         bool `json:"logicalGateway,omitempty"`
-	DisableRouter          bool `json:"disableRouter"`
+	DisableRouter          bool `json:"disableRouter,omitempty"`
 	DisableGatewayCheck    bool `json:"disableGatewayCheck,omitempty"`
 	DisableInterConnection bool `json:"disableInterConnection,omitempty"`
 
